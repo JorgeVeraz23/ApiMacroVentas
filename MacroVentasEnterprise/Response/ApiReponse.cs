@@ -2,9 +2,9 @@
 using NLog;
 using System.Text.Json.Serialization;
 
-namespace MacroVentasEnterprise.DTO
+namespace MacroVentasEnterprise.Response
 {
-    public class MessageInfoDTO
+    public class ApiReponse
     {
         [JsonIgnore]
         private static Logger? _log;
@@ -13,7 +13,7 @@ namespace MacroVentasEnterprise.DTO
         public bool Success { get; set; } = true;
         public int Status { get; set; }
 
-        public MessageInfoDTO ErrorInterno(Exception ex, string nombre, string mensaje)
+        public ApiReponse ErrorInterno(Exception ex, string nombre, string mensaje)
         {
             _log = LogManager.GetLogger(nombre);
 
@@ -25,7 +25,7 @@ namespace MacroVentasEnterprise.DTO
             return this;
 
         }
-        public MessageInfoDTO AccionCompletada(string mensaje)
+        public ApiReponse AccionCompletada(string mensaje)
         {
             Status = StatusCodes.Status200OK;
             Message = mensaje;
@@ -33,7 +33,7 @@ namespace MacroVentasEnterprise.DTO
             return this;
         }
 
-        public MessageInfoDTO AccionFallida(string mensaje, int status)
+        public ApiReponse AccionFallida(string mensaje, int status)
         {
             _log = LogManager.GetLogger(mensaje);
 

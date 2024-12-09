@@ -1,8 +1,8 @@
 using MacroVentasEnterprise;
 using MacroVentasEnterprise.Data;
 using MacroVentasEnterprise.Interfaces;
+using MacroVentasEnterprise.Logica;
 using MacroVentasEnterprise.Repository;
-using MacroVentasEnterprise.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -20,16 +20,16 @@ builder.Services.AddEndpointsApiExplorer();
 // Configuración de Swagger
 builder.Services.AddSwaggerGen(c =>
 {
-    // Configuración para permitir la inclusión del token JWT
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        In = ParameterLocation.Header,
-        Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer",
-        BearerFormat = "JWT",
-        Description = "Ingrese 'Bearer' seguido de un espacio y el token JWT"
-    });
+    //// Configuración para permitir la inclusión del token JWT
+    //c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    //{
+    //    In = ParameterLocation.Header,
+    //    Name = "Authorization",
+    //    Type = SecuritySchemeType.ApiKey,
+    //    Scheme = "Bearer",
+    //    BearerFormat = "JWT",
+    //    Description = "Ingrese 'Bearer' seguido de un espacio y el token JWT"
+    //});
 
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
@@ -51,39 +51,8 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Registrar el JwtService en DI
-builder.Services.AddScoped<JwtService>(); // Aquí se registra el servicio
-
-// Agregar Identity
-builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
-
-builder.Services.AddScoped<ApplicationUserRepository>();
 builder.Services.AddScoped<ClienteInterface, ClienteRepository>();
-
-
-// Configura la autenticación JWT
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.RequireHttpsMetadata = false;
-    options.SaveToken = true;
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-    };
-});
+builder.Services.AddScoped<UsuarioInterface, UsuarioRepository>();
 
 
 // Agrega servicios para controllers

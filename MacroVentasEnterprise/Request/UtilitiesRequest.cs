@@ -1,10 +1,10 @@
 ﻿namespace MacroVentasEnterprise.DTO
 {
-    public class UtilitiesDTO
+    public class UtilitiesRequest
     {
     }
 
-    public class  ValueLabelDTO
+    public class  ValueLabelRequest
     {
         public string Value { get; set; }
         public string Label { get; set; }

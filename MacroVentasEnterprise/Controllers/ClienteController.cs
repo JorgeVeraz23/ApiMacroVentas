@@ -54,12 +54,46 @@ namespace MacroVentasEnterprise.Controllers
         }
 
         [HttpPost("CrearCliente")]
-        public async Task<ActionResult> CrearCliente(ClienteDTO clienteDTO)
+        public async Task<ActionResult> CrearCliente(ClienteRequest clienteRequest)
         {
             try
             {
 
-                var response = await _clienteInterface.CrearCliente(clienteDTO);
+                var response = await _clienteInterface.CrearCliente(clienteRequest);
+
+                return Ok(response);
+
+            }catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpPut("ActualizarCliente")]
+        public async Task<ActionResult> ActualizarCliente(ClienteRequest clienteRequest)
+        {
+            try
+            {
+
+                var response = await _clienteInterface.EditarCliente(clienteRequest);
+
+                return Ok(response);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("EliminarCliente")]
+        public async Task<ActionResult> EliminarCliente(long id)
+        {
+            try
+            {
+
+                var response = await _clienteInterface.DeleteCliente(id);
 
                 return Ok(response);
 

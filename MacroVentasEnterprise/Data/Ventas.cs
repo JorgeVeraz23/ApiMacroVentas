@@ -12,11 +12,11 @@ namespace MacroVentasEnterprise.Data
 
 
         [ForeignKey("User")]
-        public string UserId { get; set; }
+        public long UserId { get; set; }
 
 
       
-        public virtual ApplicationUser User { get; set; }
+        public virtual Usuario User { get; set; }
         public virtual ICollection<VentaDetalle>? VentaDetalles { get; set; }
     }
 }

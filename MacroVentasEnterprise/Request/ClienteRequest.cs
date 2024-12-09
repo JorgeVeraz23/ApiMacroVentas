@@ -1,6 +1,6 @@
 ﻿namespace MacroVentasEnterprise.DTO
 {
-    public class ClienteDTO
+    public class ClienteRequest
     {
         public long IdCliente { get; set; }
         public string NombreCliente { get; set; }
