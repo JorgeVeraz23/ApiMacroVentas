@@ -115,6 +115,7 @@ namespace MacroVentasEnterprise.Logica
                     CodigoProducto = c.CodigoProducto,
                     Precio = c.Precio,
                     Stock = c.Stock,
+                    idCategoriaProducto = c.IdCategoria,
                 }).ToList()
             }).ToListAsync();
 
@@ -135,6 +136,7 @@ namespace MacroVentasEnterprise.Logica
                     CodigoProducto = c.CodigoProducto,
                     Precio = c.Precio,
                     Stock = c.Stock,
+                    idCategoriaProducto = c.IdCategoria,
                 }).ToList()
             }).FirstOrDefaultAsync() ?? throw new ArgumentNullException("No se encontro el producto especificado");
 

@@ -25,53 +25,81 @@ namespace MacroVentasEnterprise.Logica
 
         public async Task<ApiReponse> CrearVenta(VentaRequest ventaRequest)
         {
+            using var transaction = await _context.Database.BeginTransactionAsync(); // Inicia la transacción
+
             try
             {
+                // Crear el encabezado de la venta
                 Ventas ventas = new Ventas
                 {
                     FechaCreacion = DateTime.Now,
                     Activo = true,
-                    VentaDetalles = new Collection<VentaDetalle>()
+                    VentaDetalles = new Collection<VentaDetalle>(),
+                    IVA = 13,
+                    UserId = ventaRequest.UserId,
+                    IdCliente = ventaRequest.IdCliente,
+                    TotalVenta = 0 // Inicializa el total en 0
                 };
 
-                ventas.IVA = ventaRequest.IVA;
-                ventas.UserId = ventaRequest.UserId;
-                ventas.Activo = true;
-                ventas.FechaCreacion = DateTime.Now;
-                ventas.IdCliente = ventaRequest.IdCliente;
-
-
+                decimal subtotal = 0;
+                 
                 foreach (var item in ventaRequest.VentaDetalles!)
                 {
-                    var prePro = await _context.Producto.Where(x => x.Activo && x.IdProducto == item.IdProducto).Select(c => c.Precio).FirstOrDefaultAsync();
+                    // Obtener el producto relacionado
+                    var prePro = await _context.Producto
+                        .Where(x => x.Activo && x.IdProducto == item.IdProducto)
+                        .FirstOrDefaultAsync();
 
-                    var stockEntiedad = await _context.Producto.Where(x => x.Activo && x.IdProducto == item.IdProducto).Select(c)
+                    if (prePro == null)
+                    {
+                        throw new InvalidOperationException($"El producto con Id {item.IdProducto} no existe.");
+                    }
 
+                    // Validar si hay suficiente stock
+                    if (prePro.Stock < item.Cantidad)
+                    {
+                        throw new InvalidOperationException($"Stock insuficiente para el producto {prePro.NombreProducto}.");
+                    }
+
+                    // Ajustar el stock del producto
+                    prePro.Stock -= (int)item.Cantidad;
+
+                    // Crear el detalle de la venta
                     VentaDetalle ventaDetalle = new VentaDetalle
                     {
                         Activo = true,
                         Cantidad = item.Cantidad,
-                        SubTotal = item.Cantidad * prePro,
+                        SubTotal = item.Cantidad * prePro.Precio,
                         IdProducto = item.IdProducto,
                         IdVentas = item.IdVentas,
-                       
                         FechaCreacion = DateTime.Now,
                     };
+
+                    // Agregar el detalle a la colección de la venta
                     ventas.VentaDetalles.Add(ventaDetalle);
 
-                    //Aqui agrego el subtotal al total de la venta
-                    ventas.TotalVenta += ventaDetalle.SubTotal;
+                    // Sumar el subtotal al total de la venta
+                    subtotal += ventaDetalle.SubTotal ;
                 }
 
+                decimal ivaCalculado = subtotal * (ventas.IVA / 100);
+                ventas.TotalVenta = subtotal + ivaCalculado;
 
-
+                // Agregar la venta a la base de datos
                 await _context.Ventas.AddAsync(ventas);
+
+                // Guardar los cambios
                 await _context.SaveChangesAsync();
 
-                return infoReponse.AccionCompletada("Se creo la factura exitosamente!");
+                // Confirmar la transacción
+                await transaction.CommitAsync();
 
-            }catch (Exception ex)
+                return infoReponse.AccionCompletada("Se creó la factura exitosamente!");
+            }
+            catch (Exception ex)
             {
+                // Revertir la transacción en caso de error
+                await transaction.RollbackAsync();
                 return infoReponse.ErrorInterno(ex, "Hubo un error interno", "500");
             }
 

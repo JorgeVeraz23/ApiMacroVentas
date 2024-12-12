@@ -6,7 +6,6 @@ namespace MacroVentasEnterprise.Request
     public class VentaRequest
     {
         public long IdVentas { get; set; }
-        public decimal IVA { get; set; } = 13;
         public long IdCliente { get; set; }
 
 
