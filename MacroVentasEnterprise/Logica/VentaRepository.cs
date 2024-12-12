@@ -234,6 +234,58 @@ namespace MacroVentasEnterprise.Logica
             return ventasConDetalles;
         }
 
+        public async Task<List<ReporteVentasRequest>> ObtenerReporte(DateTime? FechaInicio, DateTime? FechaFin)
+        {
+            // Obtener ventas con sus detalles
+            var queryList = _context.Ventas.AsNoTracking()
+                .Include(x => x.VentaDetalles)
+                .ThenInclude(vd => vd.Producto) // Asegúrate de incluir la relación Producto
+                .Where(x => x.Activo);
+
+            // Aplicar filtros de fecha si están definidos
+            if (FechaInicio.HasValue && FechaFin.HasValue)
+            {
+                queryList = queryList.Where(x => x.FechaCreacion.Date >= FechaInicio.Value.Date && x.FechaCreacion.Date <= FechaFin.Value.Date);
+            }
+
+            // Obtener el reporte de ventas
+            var resultList = await queryList.Select(c => new ReporteVentasRequest
+            {
+                idVentas = c.IdVentas,
+                iva = c.IVA,
+                fechaCreacion = c.FechaCreacion,
+                totalVenta = c.TotalVenta,
+                detalles = c.VentaDetalles.Select(vd => new DetalleReporteVentasRequest
+                {
+                    idProducto = vd.IdProducto,
+                    cantidad = vd.Cantidad,
+                    producto = vd.Producto.NombreProducto,
+                    subTotal = vd.SubTotal
+                }).ToList(),
+                productoEnStock = new List<ProductosEnStockRequest>(), // Se llenará después
+            }).ToListAsync();
+
+            // Obtener productos en stock
+            var productosEnStock = await _context.Producto.AsNoTracking()
+                .Where(x => x.Activo)
+                .Select(p => new ProductosEnStockRequest
+                {
+                    idProducto = p.IdProducto,
+                    nombreProducto = p.NombreProducto,
+                    stock = p.Stock,
+                    precio = p.Precio,
+                    bajoStock = p.Stock < 10,
+                }).ToListAsync();
+
+            // Asignar productos en stock al reporte
+            foreach (var reporte in resultList)
+            {
+                reporte.productoEnStock = productosEnStock; // Asignar todos los productos en stock a cada reporte
+            }
+
+            return resultList;
+        }
+
         public Task<List<ValueLabelRequest>> SelectorVenta()
         {
             throw new NotImplementedException();

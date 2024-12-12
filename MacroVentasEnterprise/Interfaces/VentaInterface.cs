@@ -13,6 +13,7 @@ namespace MacroVentasEnterprise.Interfaces
         public Task<ApiReponse> EliminarVenta(long id);
 
         public Task<List<MostrarVentaRequest>> GetAllVentas();
+        public Task<List<ReporteVentasRequest>> ObtenerReporte(DateTime? FechaInicio, DateTime? FechaFin);
         public Task<MostrarVentaRequest> GetVentaById(long id);
         public Task<List<ValueLabelRequest>> SelectorVenta();
     }

@@ -46,6 +46,22 @@ namespace MacroVentasEnterprise.Controllers
             }
         }
 
+        [HttpGet("ObtenerReporte")]
+        public async Task<ActionResult> ObtenerReporte(DateTime? FechaInicio,  DateTime? FechaFin)
+        {
+            try
+            {
+                var response = await _ventaInterface.ObtenerReporte(FechaInicio, FechaFin);
+
+                return Ok(response);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
 
         [HttpPost("CrearVenta")]
         public async Task<ActionResult> CrearVenta(VentaRequest ventaRequest)

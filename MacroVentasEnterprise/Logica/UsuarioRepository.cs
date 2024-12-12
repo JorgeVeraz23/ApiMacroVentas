@@ -153,7 +153,7 @@ namespace MacroVentasEnterprise.Logica
                 return infoReponse.AccionFallida("No existe el usuario que se intenta loguear", 400);
             }
 
-            return infoReponse.AccionCompletada("El inicio de sesión fue exitoso!");
+            return infoReponse.AccionCompletadaLoginUsuario("El inicio de sesión fue exitoso!", validacionLogin.Correo, validacionLogin.IdUsuario);
 
         }
 
