@@ -61,6 +61,20 @@ builder.Services.AddScoped<VentaInterface, VentaRepository>();
 // Agrega servicios para controllers
 builder.Services.AddControllers();
 
+
+// Configuración de CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin() // Permitir cualquier origen
+              .AllowAnyMethod() // Permitir cualquier método (GET, POST, etc.)
+              .AllowAnyHeader(); // Permitir cualquier encabezado
+    });
+});
+
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -75,6 +89,8 @@ if (app.Environment.IsDevelopment())
 
 
 
+// Usa CORS con la política definida
+app.UseCors("AllowAll");
 
 app.UseHttpsRedirection();
 //app.UseRouting();
