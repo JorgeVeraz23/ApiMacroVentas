@@ -39,11 +39,13 @@ namespace MacroVentasEnterprise.Logica
                 ventas.Activo = true;
                 ventas.FechaCreacion = DateTime.Now;
                 ventas.IdCliente = ventaRequest.IdCliente;
-               
+
 
                 foreach (var item in ventaRequest.VentaDetalles!)
                 {
                     var prePro = await _context.Producto.Where(x => x.Activo && x.IdProducto == item.IdProducto).Select(c => c.Precio).FirstOrDefaultAsync();
+
+                    var stockEntiedad = await _context.Producto.Where(x => x.Activo && x.IdProducto == item.IdProducto).Select(c)
 
                     VentaDetalle ventaDetalle = new VentaDetalle
                     {
