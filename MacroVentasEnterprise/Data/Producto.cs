@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MacroVentasEnterprise.Data
 {
@@ -10,9 +11,9 @@ namespace MacroVentasEnterprise.Data
         public int CodigoProducto { get; set; }
         public int Stock { get; set; }
         public decimal Precio { get; set; }
-        public bool EsGravadoConIVA { get; set; }
-        public decimal? TasaIVA { get; set; }
-
+        [ForeignKey("CategoriaProducto")]
+        public long IdCategoria { get; set; }
         public ICollection<VentaDetalle>? VentaDetalles { get; set; }
+        public virtual CategoriaProducto? CategoriaProducto { get; set; }
     }
 }

@@ -53,6 +53,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddScoped<ClienteInterface, ClienteRepository>();
 builder.Services.AddScoped<UsuarioInterface, UsuarioRepository>();
+builder.Services.AddScoped<ProductoInterface, ProductoRepository>();
+builder.Services.AddScoped<CategoriaProductoInterface, CategoriaProductoRepository>();
+builder.Services.AddScoped<VentaInterface, VentaRepository>();
 
 
 // Agrega servicios para controllers

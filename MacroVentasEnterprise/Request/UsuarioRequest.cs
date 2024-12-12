@@ -7,6 +7,8 @@
         public string Contrasenia { get; set; }
         public string? Telefono { get; set; }
         public string? Identitificacion { get; set; }
+        public string Nombre { get; set; }
+        public string Apellido { get; set; }    
 
     }
 }

@@ -7,7 +7,7 @@ namespace MacroVentasEnterprise.Interfaces
     public interface UsuarioInterface
     {
         public Task<List<UsuarioRequest>> GetAllUsuarios();
-        public Task<UsuarioRequest> GetUsuarioById(int id);
+        public Task<UsuarioRequest> GetUsuarioById(long id);
         public Task<List<ValueLabelRequest>> SelectorUsuarios();
         public Task<ApiReponse> LoginUsuario(string correo, string contrasenia);
         public Task<ApiReponse> CreateUsuario(UsuarioRequest usuario);

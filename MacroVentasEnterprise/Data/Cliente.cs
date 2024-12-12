@@ -12,6 +12,7 @@ namespace MacroVentasEnterprise.Data
         public string Direccion { get; set; }
 
         public virtual ICollection<Ventas>? Ventas { get; set; }
+    
 
     }
 }

@@ -26,7 +26,7 @@ namespace MacroVentasEnterprise.Logica
             {
                 var usuarioToCreate = await _context.User.Where(x => x.Activo && x.Correo.ToUpper().Equals(usuario.Correo.ToUpper())).FirstOrDefaultAsync();
 
-                if (usuarioToCreate == null)
+                if (usuarioToCreate != null)
                 {
                     return infoReponse.AccionFallida("Ya existe un usuario creado con ese nombre", 400);
                 }
@@ -35,14 +35,15 @@ namespace MacroVentasEnterprise.Logica
 
                 Usuario usuarioEntity = new Usuario();
 
-                usuarioEntity.Activo = false;
+                usuarioEntity.Activo = true;
 
 
                 usuarioEntity.Correo = usuario.Correo;
                 usuarioEntity.Contrasenia = usuario.Contrasenia;
                 usuarioEntity.Telefono = usuario.Telefono;
                 usuarioEntity.Identitificacion = usuario.Identitificacion;
-
+                usuarioEntity.Nombre = usuario.Nombre;
+                usuarioEntity.Apellido = usuario.Apellido;
 
                 usuarioEntity.FechaCreacion = DateTime.Now;
 
@@ -127,7 +128,7 @@ namespace MacroVentasEnterprise.Logica
             return usuariosList;
         }
 
-        public async Task<UsuarioRequest> GetUsuarioById(int id)
+        public async Task<UsuarioRequest> GetUsuarioById(long id)
         {
             var usuarioRequest = await _context.User.AsNoTracking().Where(x => x.Activo && x.IdUsuario == id).Select(c => new UsuarioRequest
             {
@@ -143,9 +144,17 @@ namespace MacroVentasEnterprise.Logica
 
         }
 
-        public Task<ApiReponse> LoginUsuario(string correo, string contrasenia)
+        public async Task<ApiReponse> LoginUsuario(string correo, string contrasenia)
         {
-            throw new NotImplementedException();
+            var validacionLogin = await _context.User.Where(x => x.Activo && x.Correo.ToUpper().Equals(correo.ToUpper()) && x.Contrasenia.ToUpper().Equals(contrasenia.ToUpper())).FirstOrDefaultAsync();
+
+            if(validacionLogin == null)
+            {
+                return infoReponse.AccionFallida("No existe el usuario que se intenta loguear", 400);
+            }
+
+            return infoReponse.AccionCompletada("El inicio de sesión fue exitoso!");
+
         }
 
         public async Task<List<ValueLabelRequest>> SelectorUsuarios()

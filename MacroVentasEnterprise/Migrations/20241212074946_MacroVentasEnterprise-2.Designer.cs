@@ -4,6 +4,7 @@ using MacroVentasEnterprise;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MacroVentasEnterprise.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241212074946_MacroVentasEnterprise-2")]
+    partial class MacroVentasEnterprise2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -107,8 +110,14 @@ namespace MacroVentasEnterprise.Migrations
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
 
+                    b.Property<long?>("CategoriaProductoIdCategoriaProducto")
+                        .HasColumnType("bigint");
+
                     b.Property<int>("CodigoProducto")
                         .HasColumnType("int");
+
+                    b.Property<bool>("EsGravadoConIVA")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime2");
@@ -118,9 +127,6 @@ namespace MacroVentasEnterprise.Migrations
 
                     b.Property<DateTime>("FechaModificacion")
                         .HasColumnType("datetime2");
-
-                    b.Property<long>("IdCategoria")
-                        .HasColumnType("bigint");
 
                     b.Property<string>("NombreProducto")
                         .IsRequired()
@@ -132,9 +138,12 @@ namespace MacroVentasEnterprise.Migrations
                     b.Property<int>("Stock")
                         .HasColumnType("int");
 
+                    b.Property<decimal?>("TasaIVA")
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("IdProducto");
 
-                    b.HasIndex("IdCategoria");
+                    b.HasIndex("CategoriaProductoIdCategoriaProducto");
 
                     b.ToTable("Producto");
                 });
@@ -149,10 +158,6 @@ namespace MacroVentasEnterprise.Migrations
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
-
-                    b.Property<string>("Apellido")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Contrasenia")
                         .IsRequired()
@@ -172,10 +177,6 @@ namespace MacroVentasEnterprise.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Identitificacion")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Telefono")
@@ -238,6 +239,9 @@ namespace MacroVentasEnterprise.Migrations
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
 
+                    b.Property<long?>("ClienteIdCliente")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime2");
 
@@ -250,9 +254,6 @@ namespace MacroVentasEnterprise.Migrations
                     b.Property<decimal>("IVA")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<long>("IdCliente")
-                        .HasColumnType("bigint");
-
                     b.Property<decimal>("TotalVenta")
                         .HasColumnType("decimal(18,2)");
 
@@ -261,7 +262,7 @@ namespace MacroVentasEnterprise.Migrations
 
                     b.HasKey("IdVentas");
 
-                    b.HasIndex("IdCliente");
+                    b.HasIndex("ClienteIdCliente");
 
                     b.HasIndex("UserId");
 
@@ -270,13 +271,9 @@ namespace MacroVentasEnterprise.Migrations
 
             modelBuilder.Entity("MacroVentasEnterprise.Data.Producto", b =>
                 {
-                    b.HasOne("MacroVentasEnterprise.Data.CategoriaProducto", "CategoriaProducto")
+                    b.HasOne("MacroVentasEnterprise.Data.CategoriaProducto", null)
                         .WithMany("Productos")
-                        .HasForeignKey("IdCategoria")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CategoriaProducto");
+                        .HasForeignKey("CategoriaProductoIdCategoriaProducto");
                 });
 
             modelBuilder.Entity("MacroVentasEnterprise.Data.VentaDetalle", b =>
@@ -300,19 +297,15 @@ namespace MacroVentasEnterprise.Migrations
 
             modelBuilder.Entity("MacroVentasEnterprise.Data.Ventas", b =>
                 {
-                    b.HasOne("MacroVentasEnterprise.Data.Cliente", "Cliente")
+                    b.HasOne("MacroVentasEnterprise.Data.Cliente", null)
                         .WithMany("Ventas")
-                        .HasForeignKey("IdCliente")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ClienteIdCliente");
 
                     b.HasOne("MacroVentasEnterprise.Data.Usuario", "User")
                         .WithMany("VentasDeUsuario")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Cliente");
 
                     b.Navigation("User");
                 });

@@ -23,6 +23,12 @@ namespace MacroVentasEnterprise
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Ventas>()
+                .HasMany(v => v.VentaDetalles)
+                .WithOne(d => d.Ventas)
+                .HasForeignKey(g => g.IdVentas)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

@@ -4,6 +4,7 @@ using MacroVentasEnterprise;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MacroVentasEnterprise.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241212082729_MacroVentas-3")]
+    partial class MacroVentas3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -107,8 +110,14 @@ namespace MacroVentasEnterprise.Migrations
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
 
+                    b.Property<long?>("CategoriaProductoIdCategoriaProducto")
+                        .HasColumnType("bigint");
+
                     b.Property<int>("CodigoProducto")
                         .HasColumnType("int");
+
+                    b.Property<bool>("EsGravadoConIVA")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime2");
@@ -118,9 +127,6 @@ namespace MacroVentasEnterprise.Migrations
 
                     b.Property<DateTime>("FechaModificacion")
                         .HasColumnType("datetime2");
-
-                    b.Property<long>("IdCategoria")
-                        .HasColumnType("bigint");
 
                     b.Property<string>("NombreProducto")
                         .IsRequired()
@@ -132,9 +138,12 @@ namespace MacroVentasEnterprise.Migrations
                     b.Property<int>("Stock")
                         .HasColumnType("int");
 
+                    b.Property<decimal?>("TasaIVA")
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("IdProducto");
 
-                    b.HasIndex("IdCategoria");
+                    b.HasIndex("CategoriaProductoIdCategoriaProducto");
 
                     b.ToTable("Producto");
                 });
@@ -270,13 +279,9 @@ namespace MacroVentasEnterprise.Migrations
 
             modelBuilder.Entity("MacroVentasEnterprise.Data.Producto", b =>
                 {
-                    b.HasOne("MacroVentasEnterprise.Data.CategoriaProducto", "CategoriaProducto")
+                    b.HasOne("MacroVentasEnterprise.Data.CategoriaProducto", null)
                         .WithMany("Productos")
-                        .HasForeignKey("IdCategoria")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CategoriaProducto");
+                        .HasForeignKey("CategoriaProductoIdCategoriaProducto");
                 });
 
             modelBuilder.Entity("MacroVentasEnterprise.Data.VentaDetalle", b =>
