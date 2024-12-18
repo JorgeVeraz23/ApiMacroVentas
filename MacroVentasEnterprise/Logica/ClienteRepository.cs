@@ -142,11 +142,11 @@ namespace MacroVentasEnterprise.Repository
             return clienteRequest;
         }
 
-        public async Task<List<ValueLabelRequest>> SelectorCliente()
+        public async Task<List<SecondValueLabelRequest>> SelectorCliente()
         {
-            var selectorCliente = await _context.Cliente.AsNoTracking().Where(x => x.Activo).Select(c => new ValueLabelRequest
+            var selectorCliente = await _context.Cliente.AsNoTracking().Where(x => x.Activo).Select(c => new SecondValueLabelRequest
             {
-                Value = c.IdCliente.ToString(),
+                Value = c.IdCliente,
                 Label = c.NombreCliente,
             }).ToListAsync();
 

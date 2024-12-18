@@ -36,6 +36,22 @@ namespace MacroVentasEnterprise.Controllers
         }
 
 
+        [HttpGet("SelectorClientes")]
+        public async Task<ActionResult> SelectorCliente()
+        {
+            try
+            {
+                var response = await _clienteInterface.SelectorCliente();
+
+                return Ok(response);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
 
         [HttpGet("GetById")]
         public async Task<ActionResult> GetById(long id)
