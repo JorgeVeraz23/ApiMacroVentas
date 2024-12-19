@@ -113,15 +113,17 @@ namespace MacroVentasEnterprise.Logica
             }
         }
 
-        public async Task<List<ProductoRequest>> GetAllProducto()
+        public async Task<List<MostrarProductoRequest>> GetAllProducto()
         {
-            var listaProducto = await _context.Producto.AsNoTracking().Where(x => x.Activo).Select(c => new ProductoRequest
+            var listaProducto = await _context.Producto.AsNoTracking().Where(x => x.Activo).Select(c => new MostrarProductoRequest
             {
                 IdProducto = c.IdProducto,
                 NombreProducto = c.NombreProducto,
                 CodigoProducto = c.CodigoProducto,
                 Precio = c.Precio,
                 Stock = c.Stock,
+                idCategoriaProducto  = c.IdCategoria,
+                NombreCategoriaProducto = c.CategoriaProducto.NombreCategoria,
             }).ToListAsync();
 
             return listaProducto;

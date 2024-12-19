@@ -13,4 +13,17 @@ namespace MacroVentasEnterprise.Request
         public long idCategoriaProducto { get; set; }
 
     }
+
+    public class MostrarProductoRequest
+    {
+        public long IdProducto { get; set; }
+        public string NombreProducto { get; set; }
+        public int CodigoProducto { get; set; }
+        public int Stock { get; set; }
+
+        public decimal Precio { get; set; }
+        public long idCategoriaProducto { get; set; }
+        public string NombreCategoriaProducto { get; set; }
+
+    }
 }
